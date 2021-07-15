@@ -1,0 +1,5 @@
+.gitconfig
+.DS_Store
+.idea/
+*.iml
+target/
