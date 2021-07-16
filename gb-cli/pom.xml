@@ -10,18 +10,18 @@
         <version>${revision}</version>
     </parent>
 
-    <artifactId>cli</artifactId>
+    <artifactId>gb-cli</artifactId>
     <version>${revision}</version>
     <packaging>jar</packaging>
 
     <dependencies>
         <dependency>
             <groupId>com.github.bogdanovmn.graphbuilder</groupId>
-            <artifactId>core</artifactId>
+            <artifactId>gb-core</artifactId>
         </dependency>
         <dependency>
             <groupId>com.github.bogdanovmn.graphbuilder</groupId>
-            <artifactId>maven-modules</artifactId>
+            <artifactId>gbs-maven-modules</artifactId>
         </dependency>
         <dependency>
             <groupId>com.github.bogdanovmn.cmdline</groupId>

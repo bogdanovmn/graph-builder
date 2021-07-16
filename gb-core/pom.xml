@@ -10,7 +10,7 @@
         <version>${revision}</version>
     </parent>
 
-    <artifactId>core</artifactId>
+    <artifactId>gb-core</artifactId>
     <version>${revision}</version>
     <packaging>jar</packaging>
 

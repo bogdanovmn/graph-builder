@@ -6,11 +6,11 @@
 
     <parent>
         <groupId>com.github.bogdanovmn.graphbuilder</groupId>
-        <artifactId>data-sources</artifactId>
+        <artifactId>gb-sources</artifactId>
         <version>${revision}</version>
     </parent>
 
-    <artifactId>statefulj-controller</artifactId>
+    <artifactId>gbs-statefulj-controller</artifactId>
     <version>${revision}</version>
     <packaging>jar</packaging>
 

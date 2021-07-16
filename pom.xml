@@ -16,9 +16,9 @@
 	</properties>
 
 	<modules>
-		<module>core</module>
-		<module>cli</module>
-		<module>data-sources</module>
+		<module>gb-core</module>
+		<module>gb-cli</module>
+		<module>gb-sources</module>
 	</modules>
 
 	<dependencyManagement>
@@ -28,12 +28,12 @@
 
 			<dependency>
 				<groupId>com.github.bogdanovmn.graphbuilder</groupId>
-				<artifactId>core</artifactId>
+				<artifactId>gb-core</artifactId>
 				<version>${revision}</version>
 			</dependency>
 			<dependency>
 				<groupId>com.github.bogdanovmn.graphbuilder</groupId>
-				<artifactId>maven-modules</artifactId>
+				<artifactId>gbs-maven-modules</artifactId>
 				<version>${revision}</version>
 			</dependency>
 
