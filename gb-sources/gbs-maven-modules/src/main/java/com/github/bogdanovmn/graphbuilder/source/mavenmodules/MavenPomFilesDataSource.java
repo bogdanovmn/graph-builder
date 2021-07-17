@@ -1,4 +1,4 @@
-package com.github.bogdanovmn.graphbuilder.mavenmodules;
+package com.github.bogdanovmn.graphbuilder.source.mavenmodules;
 
 
 import com.github.bogdanovmn.graphbuilder.core.DataSource;
@@ -11,7 +11,6 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 @Slf4j
@@ -24,7 +23,7 @@ public class MavenPomFilesDataSource implements DataSource<Model> {
 
     @Override
     public Set<Model> entities() {
-        List<Path> files;
+        Set<Path> files;
         try {
             files = new Directory(dir).filesWithName("pom.xml");
         } catch (IOException e) {

@@ -16,7 +16,7 @@
 
     <modules>
         <module>gbs-maven-modules</module>
-        <module>gbs-statefulj-controller</module>
+        <module>gbs-java-code</module>
     </modules>
 
     <dependencies>

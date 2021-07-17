@@ -24,6 +24,10 @@
             <artifactId>gbs-maven-modules</artifactId>
         </dependency>
         <dependency>
+            <groupId>com.github.bogdanovmn.graphbuilder</groupId>
+            <artifactId>gbsj-statefulj-controller</artifactId>
+        </dependency>
+        <dependency>
             <groupId>com.github.bogdanovmn.cmdline</groupId>
             <artifactId>cmdline-app</artifactId>
         </dependency>

@@ -1,7 +1,8 @@
 package com.github.bogdanovmn.graphbuilder.cli;
 
 import com.github.bogdanovmn.graphbuilder.core.ConnectedEntities;
-import com.github.bogdanovmn.graphbuilder.mavenmodules.MavenModuleDependencyConnectedEntities;
+import com.github.bogdanovmn.graphbuilder.source.java.statefulj.StatefuljControllerTransitionConnectedEntities;
+import com.github.bogdanovmn.graphbuilder.source.mavenmodules.MavenModuleDependencyConnectedEntities;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -10,7 +11,7 @@ import lombok.RequiredArgsConstructor;
 enum GraphType {
     MAVEN_MODULE_DEPENDENCY(MavenModuleDependencyConnectedEntities.class),
     MAVEN_MODULE_PARENT(null),
-    STATEFULJ_TRANSITION(null);
+    JAVA_STATEFULJ_TRANSITION(StatefuljControllerTransitionConnectedEntities.class);
 
     private final Class<? extends ConnectedEntities> connectedEntitiesClass;
 

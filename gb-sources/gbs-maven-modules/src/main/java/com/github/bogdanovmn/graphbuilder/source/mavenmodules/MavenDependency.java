@@ -1,4 +1,4 @@
-package com.github.bogdanovmn.graphbuilder.mavenmodules;
+package com.github.bogdanovmn.graphbuilder.source.mavenmodules;
 
 import lombok.Value;
 import org.apache.maven.model.Dependency;

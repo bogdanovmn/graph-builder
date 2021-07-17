@@ -1,4 +1,4 @@
-package com.github.bogdanovmn.graphbuilder.mavenmodules;
+package com.github.bogdanovmn.graphbuilder.source.mavenmodules;
 
 import com.github.bogdanovmn.common.stream.StringMap;
 import org.apache.maven.model.Model;

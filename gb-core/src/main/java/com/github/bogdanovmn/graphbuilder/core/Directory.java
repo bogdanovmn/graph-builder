@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.List;
+import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -15,18 +15,18 @@ public class Directory {
         this.dir = Paths.get(dir);
     }
 
-    private List<Path> files(Predicate<String> nameRule) throws IOException {
+    private Set<Path> files(Predicate<String> nameRule) throws IOException {
         return Files.walk(dir)
             .filter(Files::isRegularFile)
             .filter(f -> nameRule.test(f.getFileName().toString()))
-            .collect(Collectors.toList());
+            .collect(Collectors.toSet());
     }
 
-    List<Path> filesWithExt(String extension) throws IOException {
+    public Set<Path> filesWithExt(String extension) throws IOException {
         return files(name -> name.endsWith("." + extension));
     }
 
-    public List<Path> filesWithName(String fileName) throws IOException {
+    public Set<Path> filesWithName(String fileName) throws IOException {
         return files(name -> name.equals(fileName));
     }
 }
