@@ -17,6 +17,7 @@
 
 	<modules>
 		<module>gb-core</module>
+		<module>gb-render</module>
 		<module>gb-cli</module>
 		<module>gb-sources</module>
 	</modules>
@@ -41,6 +42,11 @@
 				<artifactId>gbsj-statefulj-controller</artifactId>
 				<version>${revision}</version>
 			</dependency>
+			<dependency>
+				<groupId>com.github.bogdanovmn.graphbuilder</groupId>
+				<artifactId>gbr-graphviz</artifactId>
+				<version>${revision}</version>
+			</dependency>
 
 			<!-- My Libs -->
 
@@ -57,6 +63,11 @@
 
 			<!-- Others -->
 
+			<dependency>
+				<groupId>guru.nidi</groupId>
+				<artifactId>graphviz-java</artifactId>
+				<version>0.18.1</version>
+			</dependency>
 			<dependency>
 				<groupId>org.slf4j</groupId>
 				<artifactId>slf4j-api</artifactId>

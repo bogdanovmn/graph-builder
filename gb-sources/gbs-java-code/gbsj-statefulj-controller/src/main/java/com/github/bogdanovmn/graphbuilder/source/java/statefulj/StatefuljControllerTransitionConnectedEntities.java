@@ -39,7 +39,6 @@ public class StatefuljControllerTransitionConnectedEntities extends ConnectedEnt
             }
         });
 
-
         return connections;
     }
 
@@ -52,19 +51,30 @@ public class StatefuljControllerTransitionConnectedEntities extends ConnectedEnt
 
     private static class AnnotationPropertiesVisitor extends VoidVisitorAdapter<Set<Connection>> {
         @Override
-        public void visit(NormalAnnotationExpr n, Set<Connection> connections) {
-            if (n.getNameAsString().equals("Transition")) {
-                LOG.debug("Annotation: {}", n.getName());
-                Connection.ConnectionBuilder connection = Connection.builder().from("*");
-                n.getPairs().forEach(
+        public void visit(NormalAnnotationExpr node, Set<Connection> connections) {
+            if (node.getNameAsString().equals("Transition")) {
+                LOG.debug("Annotation: {}", node.getName());
+                Connection.ConnectionBuilder connection = Connection.builder()
+                    .from(
+                        Connection.Node.of("*")
+                    );
+                node.getPairs().forEach(
                     p -> {
                         LOG.trace("{}={}", p.getName(), p.getValue());
                         switch (p.getNameAsString()) {
                             case "from":
-                                connection.from(p.getValue().toString());
+                                connection.from(
+                                    Connection.Node.of(
+                                        p.getValue().toString()
+                                    )
+                                );
                                 break;
                             case "to":
-                                connection.to(p.getValue().toString());
+                                connection.to(
+                                    Connection.Node.of(
+                                        p.getValue().toString()
+                                    )
+                                );
                                 break;
                             case "event":
                                 connection.note(p.getValue().toString());
@@ -74,15 +84,7 @@ public class StatefuljControllerTransitionConnectedEntities extends ConnectedEnt
                 );
                 connections.add(connection.build());
             }
-            super.visit(n, connections);
+            super.visit(node, connections);
         }
     }
-
-//    private static class MethodVisitor extends VoidVisitorAdapter<String> {
-//        @Override
-//        public void visit(MethodDeclaration n, String arg) {
-//            n.accept(new AnnotationPropertiesVisitor(), n.getName().toString());
-//            super.visit(n, arg);
-//        }
-//    }
 }

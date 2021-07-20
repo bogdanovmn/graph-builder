@@ -12,7 +12,7 @@ class StatefuljControllerTransitionConnectedEntitiesTest {
     @Test
     void connections() {
         StatefuljControllerTransitionConnectedEntities entities = new StatefuljControllerTransitionConnectedEntities("src/test/resources/source-code");
-        Set<Connection> connections = entities.connections();
+        Set<Connection> connections = entities.processedConnections();
 
         assertEquals(4, connections.size());
     }

@@ -34,8 +34,16 @@ public class MavenModuleDependencyConnectedEntities extends ConnectedEntities {
                         if (projectModel.hasModule(dependency)) {
                             result.add(
                                 Connection.builder()
-                                    .from(module.artifactId())
-                                    .to(dependency.artifactId())
+                                    .from(
+                                        Connection.Node.of(
+                                            module.artifactId()
+                                        )
+                                    )
+                                    .to(
+                                        Connection.Node.of(
+                                            dependency.artifactId()
+                                        )
+                                    )
                                 .build()
                             );
                             orphanModules.remove(module.asDependency().key());
@@ -50,7 +58,11 @@ public class MavenModuleDependencyConnectedEntities extends ConnectedEntities {
             .forEach(
                 pom -> result.add(
                     Connection.builder()
-                        .from(pom.getArtifactId())
+                        .from(
+                            Connection.Node.of(
+                                pom.getArtifactId()
+                            )
+                        )
                     .build()
                 )
             );
