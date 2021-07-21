@@ -2,10 +2,7 @@ package com.github.bogdanovmn.graphbuilder.render.graphviz;
 
 import com.github.bogdanovmn.graphbuilder.core.Connection;
 import com.github.bogdanovmn.graphbuilder.core.ConnectionsGraph;
-import guru.nidi.graphviz.attribute.Attributes;
-import guru.nidi.graphviz.attribute.Color;
-import guru.nidi.graphviz.attribute.Font;
-import guru.nidi.graphviz.attribute.Rank;
+import guru.nidi.graphviz.attribute.*;
 import guru.nidi.graphviz.engine.Format;
 import guru.nidi.graphviz.engine.Graphviz;
 import guru.nidi.graphviz.model.Graph;
@@ -43,7 +40,7 @@ public class ConnectionsGraphViz implements ConnectionsGraph {
             .nodeAttr()
                 .with(
                     Attributes.attrs(
-                        Font.size(16)
+                        Font.size(16), Shape.BOX, Style.ROUNDED
                     )
                 )
             .linkAttr().with(Color.GRAY)

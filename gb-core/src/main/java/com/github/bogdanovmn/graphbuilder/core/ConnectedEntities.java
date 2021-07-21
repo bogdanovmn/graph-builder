@@ -30,12 +30,12 @@ public abstract class ConnectedEntities {
         return connections.stream()
             .map(c -> {
                 if (roots.contains(c.from())) {
-                    return c.withFrom(
+                    c = c.withFrom(
                         c.from().withRoot(true)
                     );
                 }
                 if (c.to() != null && leaves.contains(c.to())) {
-                    return c.withTo(
+                    c = c.withTo(
                         c.to().withLeaf(true)
                     );
                 }
