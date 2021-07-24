@@ -1,5 +1,4 @@
-package com.github.bogdanovmn.graphbuilder.source.mavenmodules;
-
+package com.github.bogdanovmn.graphbuilder.source.multimoduleproject.maven;
 
 import com.github.bogdanovmn.graphbuilder.core.DataSource;
 import com.github.bogdanovmn.graphbuilder.core.Directory;
@@ -12,10 +11,15 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 @Slf4j
 public class MavenPomFilesDataSource implements DataSource<Model> {
     private final String dir;
+
+    private final static Pattern TEST_RESOURCES_PATH_PATTERN = Pattern.compile(".*/test/resources/.*");
+    private final static Pattern TARGET_PATH_PATTERN = Pattern.compile(".*/target/test-classes/.*");
 
     public MavenPomFilesDataSource(String dir) {
         this.dir = dir;
@@ -25,7 +29,13 @@ public class MavenPomFilesDataSource implements DataSource<Model> {
     public Set<Model> entities() {
         Set<Path> files;
         try {
-            files = new Directory(dir).filesWithName("pom.xml");
+            files = new Directory(dir).filesWithNameRecursively("pom.xml").stream()
+                .filter(
+                    path -> TEST_RESOURCES_PATH_PATTERN.matcher(dir).matches()
+                         || !TEST_RESOURCES_PATH_PATTERN.matcher(path.toString()).matches()
+                )
+                .filter(path -> !TARGET_PATH_PATTERN.matcher(path.toString()).matches())
+                .collect(Collectors.toSet());
         } catch (IOException e) {
             throw new IllegalStateException("Can't read all entities", e);
         }

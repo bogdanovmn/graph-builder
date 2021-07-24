@@ -15,11 +15,26 @@ public class Directory {
         this.dir = Paths.get(dir);
     }
 
-    private Set<Path> files(Predicate<String> nameRule) throws IOException {
+    private Set<Path> filesRecursively(Predicate<String> nameRule) throws IOException {
         return Files.walk(dir)
             .filter(Files::isRegularFile)
             .filter(f -> nameRule.test(f.getFileName().toString()))
             .collect(Collectors.toSet());
+    }
+
+    private Set<Path> files(Predicate<String> nameRule) throws IOException {
+        return Files.list(dir)
+            .filter(Files::isRegularFile)
+            .filter(f -> nameRule.test(f.getFileName().toString()))
+            .collect(Collectors.toSet());
+    }
+
+    public Set<Path> filesWithExtRecursively(String extension) throws IOException {
+        return filesRecursively(name -> name.endsWith("." + extension));
+    }
+
+    public Set<Path> filesWithNameRecursively(String fileName) throws IOException {
+        return filesRecursively(name -> name.equals(fileName));
     }
 
     public Set<Path> filesWithExt(String extension) throws IOException {
@@ -28,5 +43,10 @@ public class Directory {
 
     public Set<Path> filesWithName(String fileName) throws IOException {
         return files(name -> name.equals(fileName));
+    }
+
+    @Override
+    public String toString() {
+        return dir.toString();
     }
 }

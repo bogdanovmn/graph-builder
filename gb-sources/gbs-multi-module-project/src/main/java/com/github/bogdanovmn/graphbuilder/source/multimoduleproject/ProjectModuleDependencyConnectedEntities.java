@@ -1,42 +1,39 @@
-package com.github.bogdanovmn.graphbuilder.source.mavenmodules;
+package com.github.bogdanovmn.graphbuilder.source.multimoduleproject;
 
 
 import com.github.bogdanovmn.graphbuilder.core.ConnectedEntities;
 import com.github.bogdanovmn.graphbuilder.core.Connection;
 import lombok.extern.slf4j.Slf4j;
 
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 
 @Slf4j
-public class MavenModuleDependencyConnectedEntities extends ConnectedEntities {
-    private final MavenPomFilesDataSource dataSource;
+public class ProjectModuleDependencyConnectedEntities extends ConnectedEntities {
+    private final ProjectModel projectModel;
 
-    public MavenModuleDependencyConnectedEntities(String dataSourceId) {
-        super(dataSourceId);
-        this.dataSource = new MavenPomFilesDataSource(dataSourceId);
+    public ProjectModuleDependencyConnectedEntities(String projectDir) throws IOException {
+        super(projectDir);
+        this.projectModel = new ProjectRootDir(projectDir).model();
     }
 
     @Override
     public Set<Connection> connections() {
         Set<Connection> result = new HashSet<>();
-        MavenProjectModel projectModel = new MavenProjectModel(
-            dataSource.entities()
-        );
         Set<String> orphanModules = projectModel.allModuleKeys();
 
         projectModel.modules().stream()
-            .filter(module -> !module.isPomPackaging())
+            .filter(module -> !module.isMeta())
             .forEach(module -> {
                 module.dependencies().forEach(
                     dependency -> {
-                        String depKey = dependency.key();
                         if (projectModel.hasModule(dependency)) {
                             result.add(
                                 Connection.builder()
                                     .from(
                                         Connection.Node.of(
-                                            module.artifactId()
+                                            module.name()
                                         )
                                     )
                                     .to(
@@ -46,21 +43,21 @@ public class MavenModuleDependencyConnectedEntities extends ConnectedEntities {
                                     )
                                 .build()
                             );
-                            orphanModules.remove(module.asDependency().key());
-                            orphanModules.remove(depKey);
+                            orphanModules.remove(module.name());
+                            orphanModules.remove(dependency.key());
                         }
                     }
                 );
             });
         orphanModules.stream()
             .map(projectModel::moduleByKey)
-            .filter(model -> !MavenModule.builder().pom(model).build().isPomPackaging())
+            .filter(module -> !module.isMeta())
             .forEach(
-                pom -> result.add(
+                module -> result.add(
                     Connection.builder()
                         .from(
                             Connection.Node.of(
-                                pom.getArtifactId()
+                                module.name()
                             )
                         )
                     .build()

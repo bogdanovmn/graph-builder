@@ -19,7 +19,7 @@ class JavaCodeDataSource implements FilesDataSource {
     @Override
     public Set<Path> entities() {
         try {
-            return new Directory(dir).filesWithExt("java");
+            return new Directory(dir).filesWithExtRecursively("java");
         } catch (IOException e) {
             LOG.error("Can't read some files: {}", e.getMessage(), e);
         }

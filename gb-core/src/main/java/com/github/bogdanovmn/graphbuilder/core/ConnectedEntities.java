@@ -9,7 +9,7 @@ import java.util.stream.Stream;
 
 @RequiredArgsConstructor
 public abstract class ConnectedEntities {
-    private final String dataSourceId;
+    protected final String dataSourceId;
 
     abstract public Set<Connection> connections();
 

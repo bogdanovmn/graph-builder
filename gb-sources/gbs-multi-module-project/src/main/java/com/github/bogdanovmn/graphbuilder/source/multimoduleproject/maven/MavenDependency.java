@@ -1,7 +1,6 @@
-package com.github.bogdanovmn.graphbuilder.source.mavenmodules;
+package com.github.bogdanovmn.graphbuilder.source.multimoduleproject.maven;
 
 import lombok.Value;
-import org.apache.maven.model.Dependency;
 import org.apache.maven.model.Model;
 import org.apache.maven.model.Parent;
 
@@ -19,12 +18,6 @@ class MavenDependency {
         this.version = model.getVersion() == null
             ? model.getParent().getVersion()
             : model.getVersion();
-    }
-
-    MavenDependency(Dependency dependency) {
-        this.groupId = dependency.getGroupId();
-        this.artifactId = dependency.getArtifactId();
-        this.version = dependency.getVersion();
     }
 
     MavenDependency(Parent parent) {

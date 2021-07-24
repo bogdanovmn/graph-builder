@@ -10,31 +10,18 @@
         <version>${revision}</version>
     </parent>
 
-    <artifactId>gb-sources</artifactId>
+    <artifactId>gb-render</artifactId>
     <version>${revision}</version>
     <packaging>pom</packaging>
 
     <modules>
-        <module>gbs-multi-module-project</module>
-        <module>gbs-java-code</module>
+        <module>gbr-graphviz</module>
     </modules>
 
     <dependencies>
         <dependency>
             <groupId>com.github.bogdanovmn.graphbuilder</groupId>
             <artifactId>gb-core</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>ch.qos.logback</groupId>
-            <artifactId>logback-classic</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>ch.qos.logback</groupId>
-            <artifactId>logback-core</artifactId>
         </dependency>
     </dependencies>
 
