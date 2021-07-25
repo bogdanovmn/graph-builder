@@ -26,7 +26,7 @@ public class GradleProjectModel implements ProjectModel {
     // +--- Project ':framework-bom' - Spring Framework (Bill of Materials)
     private final static Pattern SUB_PROJECT_PATTERN = Pattern.compile(".*--- Project '([^']+)'.*");
     // +--- project :spring-aop
-    private final static Pattern PROJECT_DEPENDENCY_PATTERN = Pattern.compile("^\\+--- project (\\S+)$");
+    private final static Pattern PROJECT_DEPENDENCY_PATTERN = Pattern.compile("^\\+--- project (\\S+)(\\s+\\(.\\))?$");
 
     private final static List<Pattern> DEPENDENCY_PATTERNS = Arrays.asList(
         //+--- io.spring.javaformat:spring-javaformat-checkstyle:0.0.15
@@ -49,7 +49,9 @@ public class GradleProjectModel implements ProjectModel {
     @Override
     public Set<String> allModuleKeys() {
         fetchModules();
-        return modules.keySet();
+        return new HashSet<>(
+            modules.keySet()
+        );
     }
 
     @Override
@@ -66,16 +68,17 @@ public class GradleProjectModel implements ProjectModel {
 
     private void fetchModules() {
         if (modules == null) {
-            modules = new StringMap<>(
-                projectNames().stream()
-                    .map(name ->
-                        GradleModule.builder()
-                            .name(name)
-                            .dependencies(
-                                projectDependencies(name)
-                            )
+            Set<Module> names = projectNames().stream()
+                .map(name ->
+                    GradleModule.builder()
+                        .name(name)
+                        .dependencies(
+                            projectDependencies(name)
+                        )
                         .build()
-                    ).collect(Collectors.toSet()),
+                ).collect(Collectors.toSet());
+            modules = new StringMap<>(
+                names,
                 m -> m.asDependency().key()
             );
             modules.put(
@@ -98,12 +101,10 @@ public class GradleProjectModel implements ProjectModel {
             System.out.println(line);
             Matcher subProjectMatchingResult = SUB_PROJECT_PATTERN.matcher(line);
             if (subProjectMatchingResult.matches()) {
-                String name = subProjectMatchingResult.group(1);
                 result.add(
-                    name
-//                    name.startsWith(":")
-//                        ? name.substring(1)
-//                        : name
+                    subProjectName(
+                        subProjectMatchingResult.group(1)
+                    )
                 );
             } else {
                 Matcher rootProjectMatchingResult = ROOT_PROJECT_PATTERN.matcher(line);
@@ -122,11 +123,16 @@ public class GradleProjectModel implements ProjectModel {
         for (String line : output) {
             Matcher projectDependencyMatchingResult = PROJECT_DEPENDENCY_PATTERN.matcher(line);
             if (projectDependencyMatchingResult.matches()) {
-                result.add(
-                    ModuleDependency.builder()
-                        .artifactId(projectDependencyMatchingResult.group(1))
-                    .build()
+                String projectDependency = subProjectName(
+                    projectDependencyMatchingResult.group(1)
                 );
+                if (!projectName.equals(projectDependency)) {
+                    result.add(
+                        ModuleDependency.builder()
+                            .artifactId(projectDependency)
+                        .build()
+                    );
+                }
             } else {
                 for (Pattern pattern : DEPENDENCY_PATTERNS) {
                     Matcher dependencyMatchingResult = pattern.matcher(line);
@@ -145,5 +151,11 @@ public class GradleProjectModel implements ProjectModel {
         }
         LOG.debug("Module {} total dependencies: {}", projectName, result.size());
         return result;
+    }
+
+    private String subProjectName(String rawName) {
+        return rawName.startsWith(":")
+            ? rawName.substring(1)
+            : rawName;
     }
 }
