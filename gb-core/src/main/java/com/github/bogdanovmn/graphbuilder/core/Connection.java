@@ -36,6 +36,7 @@ public class Connection {
         boolean isRoot;
         @With
         boolean isLeaf;
+        String cluster;
 
         public static Node of(String id) {
             return Node.builder().id(id).build();

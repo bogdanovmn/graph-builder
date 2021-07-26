@@ -3,6 +3,7 @@ package com.github.bogdanovmn.graphbuilder.cli;
 import com.github.bogdanovmn.cmdline.CmdLineAppBuilder;
 import com.github.bogdanovmn.graphbuilder.core.Connection;
 import com.github.bogdanovmn.graphbuilder.core.ConnectionsGraph;
+import com.github.bogdanovmn.graphbuilder.core.GraphOutputOptions;
 import com.github.bogdanovmn.graphbuilder.render.graphviz.ConnectionsGraphViz;
 
 import java.time.ZonedDateTime;
@@ -16,6 +17,7 @@ class App {
     public static final String ARG_DATA_SOURCE = "data-source";
     public static final String ARG_OUTPUT_DIR = "output-dir";
     public static final String ARG_VERBOSE = "verbose";
+    public static final String ARG_HAND_MADE = "rough";
 
     public static void main(String[] args) throws Exception {
 
@@ -28,6 +30,7 @@ class App {
             .withRequiredArg(ARG_OUTPUT_DIR, "where results have to be created")
 
             .withFlag(ARG_VERBOSE, "print additional info")
+            .withFlag(ARG_HAND_MADE, "make a graph with hand made style")
 
             .withEntryPoint(
                 cmdLine -> {
@@ -47,7 +50,12 @@ class App {
                         ).forEach(System.out::println);
                     }
 
-                    ConnectionsGraph graph = new ConnectionsGraphViz(connections);
+                    ConnectionsGraph graph = new ConnectionsGraphViz(
+                        connections,
+                        GraphOutputOptions.builder()
+                            .handMade(cmdLine.hasOption(ARG_HAND_MADE))
+                        .build()
+                    );
                     graph.saveAsImage(
                         String.format(
                             "%s/%s--%s--%s.png",

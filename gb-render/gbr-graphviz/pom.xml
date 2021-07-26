@@ -18,5 +18,9 @@
             <groupId>guru.nidi</groupId>
             <artifactId>graphviz-java</artifactId>
         </dependency>
+        <dependency>
+            <groupId>guru.nidi</groupId>
+            <artifactId>graphviz-rough</artifactId>
+        </dependency>
     </dependencies>
 </project>
