@@ -7,6 +7,9 @@ Now, there are two types of input data: multi-module java projects (maven or gra
 ```bash
 $ mvn clean package
 ```
+## GraphViz installation
+If you haven't yet installed GraphViz, it's time!  
+http://www.graphviz.org/download/
 ## Usage information
 ```bash
 $ java -jar gb-cli/target/graph-builder.jar -h
@@ -23,7 +26,7 @@ Generate a graph from a source of data
 ```
 ## Making this project modules dependencies graph (hand made style)
 ```bash
-$ java -jar gb-cli/target/graph-builder.jar -g PROJECT_MODULE_DEPENDENCY -o ~/graphs -d .
+$ java -jar gb-cli/target/graph-builder.jar -g PROJECT_MODULE_DEPENDENCY -o ~/graphs -d . -r
 ```
 ### Output
 ![example](./examples/pmd_this_hand_made.png)
