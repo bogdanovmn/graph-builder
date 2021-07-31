@@ -15,6 +15,7 @@ class AnnotationPropertiesCollector extends VoidVisitorAdapter<Set<Connection>> 
         if (node.getNameAsString().equals("Transition")) {
             Connection.ConnectionBuilder connection = Connection.builder();
             Node from = null;
+            Node to = null;
             String cluster = null;
             for (MemberValuePair p : node.getPairs()) {
                 String attrValue = p.getValue().toString();
@@ -29,13 +30,11 @@ class AnnotationPropertiesCollector extends VoidVisitorAdapter<Set<Connection>> 
                         cluster = status.prefix();
                         break;
                     case "to":
-                        connection.to(
-                            Node.builder()
+                        to = Node.builder()
                                 .id(attrValue)
                                 .cluster(status.prefix())
                                 .title(status.name())
-                                .build()
-                        );
+                        .build();
                         cluster = status.prefix();
                         break;
                     case "event":
@@ -43,18 +42,22 @@ class AnnotationPropertiesCollector extends VoidVisitorAdapter<Set<Connection>> 
                         break;
                 }
             }
-            connection.from(
-                from == null
-                    ? Node.builder()
-                        .id(
-                            Optional.ofNullable(cluster).orElse("") + "Any"
-                        )
-                        .cluster(cluster)
-                        .title("*")
-                        .build()
-                    : from
-            );
-            connections.add(connection.build());
+            if (from != null || to != null) {
+                connection
+                    .from(
+                        from == null
+                            ? Node.builder()
+                                .id(
+                                    Optional.ofNullable(cluster).orElse("") + "Any"
+                                )
+                                .cluster(cluster)
+                                .title("*")
+                            .build()
+                            : from
+                    )
+                    .to(to);
+                connections.add(connection.build());
+            }
         }
         super.visit(node, connections);
     }
