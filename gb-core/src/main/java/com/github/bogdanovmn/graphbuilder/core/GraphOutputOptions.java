@@ -7,4 +7,5 @@ import lombok.Value;
 @Builder
 public class GraphOutputOptions {
     boolean handMade;
+    boolean mergeLinks;
 }

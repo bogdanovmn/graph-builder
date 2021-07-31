@@ -14,8 +14,12 @@ import lombok.RequiredArgsConstructor;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static guru.nidi.graphviz.attribute.Rank.RankDir.TOP_TO_BOTTOM;
 import static guru.nidi.graphviz.model.Factory.graph;
@@ -27,6 +31,16 @@ public class ConnectionsGraphViz implements ConnectionsGraph {
     private final Set<Connection> connections;
     private final GraphOutputOptions options;
 
+    private static final UniqRandomValue<Color> CLUSTER_BG_COLORS = new UniqRandomValue<>(
+        Color.HONEYDEW2,
+        Color.IVORY2,
+        Color.LAVENDER,
+        Color.LIGHTCYAN,
+        Color.LIGHTYELLOW,
+        Color.PAPAYAWHIP,
+        Color.SNOW2
+    );
+
     @Override
     public void saveAsImage(String fileName) throws IOException {
         Graph g = graph("connections")
@@ -36,7 +50,8 @@ public class ConnectionsGraphViz implements ConnectionsGraph {
                 .with(
                     Attributes.attrs(
                         Rank.dir(TOP_TO_BOTTOM),
-                        Attributes.attr("dpi", "150")
+                        Attributes.attr("dpi", "150"),
+                        Attributes.attr("concentrate", options.mergeLinks())
                     )
                 )
             .nodeAttr()
@@ -46,43 +61,9 @@ public class ConnectionsGraphViz implements ConnectionsGraph {
                     )
                 )
             .linkAttr().with(Color.GRAY)
-            .with(
-                connections.stream()
-                    .map(
-                        connection -> {
-                            Node fromNode = node(connection.from().id());
-                            Color linkColor = Color.GRAY;
-                            if (connection.from().isRoot()) {
-                                fromNode = fromNode.with(
-                                    Attributes.attrs(
-                                        Attributes.attr("color", "sandybrown"),
-                                        Attributes.attr("style", "rounded,filled"),
-                                        Attributes.attr("fillcolor", "sandybrown"),
-                                        Attributes.attr("shape", "box")
-                                    )
-                                );
-                                linkColor = Color.SANDYBROWN;
-                            }
+            .with(nodes())
+            .with(clusters());
 
-                            if (connection.to() != null) {
-                                Node toNode = node(connection.to().id());
-                                if (connection.to().isLeaf()) {
-                                    toNode = toNode.with(
-                                        Attributes.attrs(
-                                            Attributes.attr("color", "green"),
-                                            Attributes.attr("style", "rounded,filled"),
-                                            Attributes.attr("fillcolor", "lightgreen"),
-                                            Attributes.attr("shape", "box")
-                                        )
-                                    );
-                                    linkColor = Color.GREEN;
-                                }
-                                return fromNode.link(to(toNode).with(linkColor));
-                            }
-                            return fromNode;
-                    }
-                ).collect(Collectors.toList())
-            );
         Graphviz graphviz = Graphviz.fromGraph(g);
         if (options.handMade()) {
             graphviz = graphviz.processor(
@@ -92,10 +73,101 @@ public class ConnectionsGraphViz implements ConnectionsGraph {
                     .roughness(1)
                     .fillStyle(
                         FillStyle.crossHatch().width(3).gap(3).angle(0))
-//                    .font("*serif", "Comic Sans MS") // doesn't work correctly
             );
         }
         graphviz.render(Format.PNG)
             .toFile(new File(fileName));
+    }
+
+    private List<Graph> clusters() {
+        Map<String, List<Connection.Node>> nodesByCluster = connections.stream()
+            .flatMap(connection -> Stream.of(connection.from(), connection.to()))
+            .filter(n -> n != null)
+            .filter(n -> n.cluster() != null)
+            .collect(
+                Collectors.groupingBy(
+                    Connection.Node::cluster,
+                    Collectors.toList()
+                )
+            );
+
+        List<Graph> result = new ArrayList<>();
+        for (String clusterId : nodesByCluster.keySet()) {
+            result.add(
+                graph(clusterId).cluster()
+                    .graphAttr()
+                        .with(
+                            Style.FILLED,
+                            CLUSTER_BG_COLORS.next(),
+                            Label.of(clusterId),
+                            Attributes.attr("margin", "10.0")
+                        )
+                    .with(
+                        nodesByCluster.get(clusterId).stream()
+                            .map(x -> node(x.id()))
+                            .collect(Collectors.toList())
+                    )
+            );
+        }
+        return result;
+    }
+
+    private List<Node> nodes() {
+        return connections.stream()
+            .map(
+                connection -> {
+                    Attributes<ForNode> defaultNodeAttrs = nodeAttrs("gray13", "white");
+                    Color linkColor = Color.GRAY;
+
+                    Node fromNode = node(
+                        connection.from().id()
+                    ).with(
+                        Label.of(
+                            connection.from().title()
+                        ),
+                        defaultNodeAttrs
+                    );
+
+                    if (connection.from().isRoot()) {
+                        fromNode = fromNode.with(
+                            nodeAttrs("sandybrown")
+                        );
+                        linkColor = Color.SANDYBROWN;
+                    }
+
+                    if (connection.to() != null) {
+                        Node toNode = node(
+                            connection.to().id()
+                        ).with(
+                            Label.of(
+                                connection.to().title()
+                            ),
+                            defaultNodeAttrs
+                        );
+
+                        if (connection.to().isLeaf()) {
+                            toNode = toNode.with(
+                                nodeAttrs("lightgreen")
+                            );
+                            linkColor = Color.GREEN;
+                        }
+                        return fromNode.link(to(toNode).with(linkColor));
+                    }
+                    return fromNode;
+                }
+            ).collect(Collectors.toList());
+    }
+
+    private Attributes<ForNode> nodeAttrs(String color) {
+        return nodeAttrs(color, color);
+    }
+
+    private Attributes<ForNode> nodeAttrs(String borderColor, String fillColor) {
+        return Attributes.attrs(
+            Attributes.attr("color", borderColor),
+            Attributes.attr("style", "rounded,filled"),
+            Attributes.attr("fillcolor", fillColor),
+            Attributes.attr("shape", "box")
+        );
     }
 }

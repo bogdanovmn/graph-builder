@@ -22,5 +22,9 @@
             <groupId>guru.nidi</groupId>
             <artifactId>graphviz-rough</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.github.bogdanovmn.common.core</groupId>
+            <artifactId>common-core</artifactId>
+        </dependency>
     </dependencies>
 </project>

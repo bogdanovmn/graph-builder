@@ -18,6 +18,7 @@ class App {
     public static final String ARG_OUTPUT_DIR = "output-dir";
     public static final String ARG_VERBOSE = "verbose";
     public static final String ARG_HAND_MADE = "rough";
+    public static final String ARG_MERGE_LINKS = "merge-links";
 
     public static void main(String[] args) throws Exception {
 
@@ -31,6 +32,7 @@ class App {
 
             .withFlag(ARG_VERBOSE, "print additional info")
             .withFlag(ARG_HAND_MADE, "make a graph with hand made style")
+            .withFlag(ARG_MERGE_LINKS, "try to decrease a number of links")
 
             .withEntryPoint(
                 cmdLine -> {
@@ -54,6 +56,7 @@ class App {
                         connections,
                         GraphOutputOptions.builder()
                             .handMade(cmdLine.hasOption(ARG_HAND_MADE))
+                            .mergeLinks(cmdLine.hasOption(ARG_MERGE_LINKS))
                         .build()
                     );
                     graph.saveAsImage(

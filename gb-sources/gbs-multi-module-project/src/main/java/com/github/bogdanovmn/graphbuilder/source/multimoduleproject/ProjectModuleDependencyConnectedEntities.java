@@ -3,6 +3,7 @@ package com.github.bogdanovmn.graphbuilder.source.multimoduleproject;
 
 import com.github.bogdanovmn.graphbuilder.core.ConnectedEntities;
 import com.github.bogdanovmn.graphbuilder.core.Connection;
+import com.github.bogdanovmn.graphbuilder.core.Connection.Node;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
@@ -32,12 +33,12 @@ public class ProjectModuleDependencyConnectedEntities extends ConnectedEntities 
                             result.add(
                                 Connection.builder()
                                     .from(
-                                        Connection.Node.of(
+                                        Node.of(
                                             module.name()
                                         )
                                     )
                                     .to(
-                                        Connection.Node.of(
+                                        Node.of(
                                             dependency.artifactId()
                                         )
                                     )
@@ -56,7 +57,7 @@ public class ProjectModuleDependencyConnectedEntities extends ConnectedEntities 
                 module -> result.add(
                     Connection.builder()
                         .from(
-                            Connection.Node.of(
+                            Node.of(
                                 module.name()
                             )
                         )
