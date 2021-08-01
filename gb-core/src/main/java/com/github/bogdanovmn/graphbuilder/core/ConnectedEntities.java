@@ -15,10 +15,10 @@ public abstract class ConnectedEntities {
 
     public final Set<Connection> processedConnections() {
         Set<Connection> connections = connections();
-        Set<Connection.Node> roots = connections.stream()
+        Set<ConnectionNode> roots = connections.stream()
             .flatMap(c -> Stream.of(c.from(), c.to()))
             .collect(Collectors.toSet());
-        Set<Connection.Node> leaves = new HashSet<>(roots);
+        Set<ConnectionNode> leaves = new HashSet<>(roots);
 
         connections.forEach(c -> {
             leaves.remove(c.from());

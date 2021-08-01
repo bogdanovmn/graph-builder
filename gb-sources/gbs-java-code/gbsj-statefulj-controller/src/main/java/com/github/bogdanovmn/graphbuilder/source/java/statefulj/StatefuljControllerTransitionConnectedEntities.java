@@ -41,9 +41,12 @@ public class StatefuljControllerTransitionConnectedEntities extends ConnectedEnt
 
     private Set<Connection> parsedConnections(Path file) throws IOException {
         CompilationUnit compilationUnit = StaticJavaParser.parse(file);
-        Set<Connection> connections = new HashSet<>();
-        compilationUnit.accept(new AnnotationPropertiesCollector(), connections);
-        return connections;
+        AnnotationPropertiesCollectorContext context = new AnnotationPropertiesCollectorContext(file);
+        compilationUnit.accept(
+            new AnnotationPropertiesCollector(),
+            context
+        );
+        return context.connections();
     }
 
 }

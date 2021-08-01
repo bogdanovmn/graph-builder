@@ -33,14 +33,14 @@ class ConnectedEntitiesTest {
 
         Set<String> roots = connections.stream()
             .map(Connection::from)
-            .filter(Connection.Node::isRoot)
-            .map(Connection.Node::id)
+            .filter(ConnectionNode::isRoot)
+            .map(ConnectionNode::id)
             .collect(Collectors.toSet());
 
         Set<String> leaves = connections.stream()
             .map(Connection::to)
-            .filter(Connection.Node::isLeaf)
-            .map(Connection.Node::id)
+            .filter(ConnectionNode::isLeaf)
+            .map(ConnectionNode::id)
             .collect(Collectors.toSet());
 
         assertEquals(2, leaves.size());

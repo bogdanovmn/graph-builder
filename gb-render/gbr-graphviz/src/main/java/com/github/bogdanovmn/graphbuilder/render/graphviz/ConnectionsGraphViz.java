@@ -1,8 +1,6 @@
 package com.github.bogdanovmn.graphbuilder.render.graphviz;
 
-import com.github.bogdanovmn.graphbuilder.core.Connection;
-import com.github.bogdanovmn.graphbuilder.core.ConnectionsGraph;
-import com.github.bogdanovmn.graphbuilder.core.GraphOutputOptions;
+import com.github.bogdanovmn.graphbuilder.core.*;
 import guru.nidi.graphviz.attribute.*;
 import guru.nidi.graphviz.engine.Format;
 import guru.nidi.graphviz.engine.Graphviz;
@@ -80,30 +78,30 @@ public class ConnectionsGraphViz implements ConnectionsGraph {
     }
 
     private List<Graph> clusters() {
-        Map<String, List<Connection.Node>> nodesByCluster = connections.stream()
+        Map<ConnectionNodeCluster, List<ConnectionNode>> nodesByCluster = connections.stream()
             .flatMap(connection -> Stream.of(connection.from(), connection.to()))
             .filter(n -> n != null)
             .filter(n -> n.cluster() != null)
             .collect(
                 Collectors.groupingBy(
-                    Connection.Node::cluster,
+                    ConnectionNode::cluster,
                     Collectors.toList()
                 )
             );
 
         List<Graph> result = new ArrayList<>();
-        for (String clusterId : nodesByCluster.keySet()) {
+        for (ConnectionNodeCluster cluster : nodesByCluster.keySet()) {
             result.add(
-                graph(clusterId).cluster()
+                graph(cluster.id()).cluster()
                     .graphAttr()
                         .with(
                             Style.FILLED,
                             CLUSTER_BG_COLORS.next(),
-                            Label.of(clusterId),
+                            Label.of(cluster.title()),
                             Attributes.attr("margin", "10.0")
                         )
                     .with(
-                        nodesByCluster.get(clusterId).stream()
+                        nodesByCluster.get(cluster).stream()
                             .map(x -> node(x.id()))
                             .collect(Collectors.toList())
                     )

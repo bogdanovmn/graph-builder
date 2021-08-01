@@ -19,10 +19,10 @@ class HardcodedConnectedEntities extends ConnectedEntities {
                 String[] components = line.split(" --> ");
                 return Connection.builder()
                     .from(
-                        Connection.Node.of(components[0])
+                        ConnectionNode.of(components[0])
                     )
                     .to(
-                        Connection.Node.of(components[1])
+                        ConnectionNode.of(components[1])
                     )
                     .build();
             }
