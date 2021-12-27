@@ -5,11 +5,12 @@ import com.github.bogdanovmn.graphbuilder.source.multimoduleproject.ModuleDepend
 import lombok.Builder;
 import org.apache.maven.model.Dependency;
 import org.apache.maven.model.Model;
+import org.apache.maven.model.ModelBase;
+import org.apache.maven.model.Profile;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Builder
 class MavenModule implements Module {
@@ -39,11 +40,17 @@ class MavenModule implements Module {
 
     @Override
     public Set<ModuleDependency> dependencies() {
-        Set<Dependency> deps = new HashSet<>();
+        List<Dependency> deps = new ArrayList<>();
         if (pom.getDependencies() != null) {
             deps.addAll(pom.getDependencies());
+            deps.addAll(profileDependencies(pom));
         }
-        parents.forEach(p -> deps.addAll(p.getDependencies()));
+        parents.forEach(
+            parentPom -> {
+                deps.addAll(parentPom.getDependencies());
+                deps.addAll(profileDependencies(parentPom));
+            }
+        );
         return deps.stream()
             .map(d -> ModuleDependency.builder()
                     .artifactId(d.getArtifactId())
@@ -52,6 +59,18 @@ class MavenModule implements Module {
                 .build()
             )
             .collect(Collectors.toSet());
+    }
+
+    private static List<Dependency> profileDependencies(Model pom) {
+        List<Profile> profiles = pom.getProfiles();
+        if (profiles != null) {
+            return profiles.stream()
+                .map(ModelBase::getDependencies)
+                .flatMap(Collection::stream)
+                .collect(Collectors.toList());
+        } else {
+            return Collections.emptyList();
+        }
     }
 
     private String groupId() {

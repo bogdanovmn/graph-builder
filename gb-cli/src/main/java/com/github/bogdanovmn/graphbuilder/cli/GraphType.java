@@ -20,7 +20,7 @@ enum GraphType {
             return connectedEntitiesClass.getConstructor(String.class).newInstance(dataSourceId);
         } catch (Exception ex) {
             throw new IllegalStateException(
-                String.format("%s must have a constructor with single a String argument", connectedEntitiesClass),
+                String.format("%s must have a constructor with a single String argument", connectedEntitiesClass),
                 ex
             );
         }

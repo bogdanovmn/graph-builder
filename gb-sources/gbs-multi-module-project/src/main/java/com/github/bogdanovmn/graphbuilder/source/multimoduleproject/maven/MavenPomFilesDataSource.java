@@ -19,7 +19,7 @@ public class MavenPomFilesDataSource implements DataSource<Model> {
     private final String dir;
 
     private final static Pattern TEST_RESOURCES_PATH_PATTERN = Pattern.compile(".*/test/resources/.*");
-    private final static Pattern TARGET_PATH_PATTERN = Pattern.compile(".*/target/test-classes/.*");
+    private final static Pattern TARGET_PATH_PATTERN = Pattern.compile(".*/target/.*");
 
     public MavenPomFilesDataSource(String dir) {
         this.dir = dir;
