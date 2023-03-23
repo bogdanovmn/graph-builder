@@ -22,7 +22,7 @@ public class Directory {
             .collect(Collectors.toSet());
     }
 
-    private Set<Path> files(Predicate<String> nameRule) throws IOException {
+    public Set<Path> files(Predicate<String> nameRule) throws IOException {
         return Files.list(dir)
             .filter(Files::isRegularFile)
             .filter(f -> nameRule.test(f.getFileName().toString()))

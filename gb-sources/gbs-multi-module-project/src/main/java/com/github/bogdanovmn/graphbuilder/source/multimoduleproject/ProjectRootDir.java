@@ -23,7 +23,7 @@ class ProjectRootDir {
                     .entities()
             );
         }
-        else if (!root.filesWithName("build.gradle").isEmpty()) {
+        else if (!root.files((name) -> name.startsWith("build.gradle")).isEmpty()) {
             model = new GradleProjectModel(
                 new GradleProject(
                     root.toString()

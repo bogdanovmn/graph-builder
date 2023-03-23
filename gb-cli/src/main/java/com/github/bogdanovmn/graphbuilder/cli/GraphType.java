@@ -10,7 +10,6 @@ import lombok.RequiredArgsConstructor;
 @Getter
 enum GraphType {
     PROJECT_MODULE_DEPENDENCY(ProjectModuleDependencyConnectedEntities.class),
-    MAVEN_MODULE_PARENT(null),
     JAVA_STATEFULJ_TRANSITION(StatefuljControllerTransitionConnectedEntities.class);
 
     private final Class<? extends ConnectedEntities> connectedEntitiesClass;

@@ -8,8 +8,10 @@ import com.github.bogdanovmn.graphbuilder.render.graphviz.ConnectionsGraphViz;
 
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 class App {
 
@@ -27,7 +29,15 @@ class App {
             .withDescription("Generate a graph from a source of data")
 
             .withRequiredArg(ARG_DATA_SOURCE, "data source directory")
-            .withRequiredArg(ARG_GRAPH_TYPE, "data source & target graph type")
+            .withRequiredArg(
+                ARG_GRAPH_TYPE,
+                String.format(
+                    "data source & target graph type (%s)",
+                    Arrays.stream(GraphType.values())
+                        .map(Enum::name)
+                        .collect(Collectors.joining(" | "))
+                )
+            )
             .withRequiredArg(ARG_OUTPUT_DIR, "where results have to be created")
 
             .withFlag(ARG_VERBOSE, "print additional info")
