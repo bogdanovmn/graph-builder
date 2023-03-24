@@ -6,6 +6,7 @@ import com.github.bogdanovmn.graphbuilder.core.Connection;
 import com.github.bogdanovmn.graphbuilder.core.ConnectionsGraph;
 import com.github.bogdanovmn.graphbuilder.core.GraphOutputOptions;
 import com.github.bogdanovmn.graphbuilder.render.graphviz.ConnectionsGraphViz;
+import lombok.extern.slf4j.Slf4j;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -16,11 +17,13 @@ import java.util.Comparator;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+@Slf4j
 class App {
 
     public static final String ARG_GRAPH_TYPE = "graph-type";
     public static final String ARG_DATA_SOURCE = "data-source";
     public static final String ARG_OUTPUT_DIR = "output-dir";
+    public static final String ARG_OUTPUT_PREFIX = "output-file-prefix";
     public static final String ARG_VERBOSE = "verbose";
     public static final String ARG_HAND_MADE = "rough";
     public static final String ARG_MERGE_LINKS = "merge-links";
@@ -42,6 +45,7 @@ class App {
                 )
             )
             .withRequiredArg(ARG_OUTPUT_DIR, "where results have to be created")
+            .withArg(ARG_OUTPUT_PREFIX, "output file prefix")
 
             .withFlag(ARG_VERBOSE, "print additional info")
             .withFlag(ARG_HAND_MADE, "make a graph with hand made style")
@@ -71,18 +75,22 @@ class App {
                         .build()
                     );
 
+                    String timestampSuffix = ZonedDateTime.now().format(
+                        DateTimeFormatter.ofPattern("yyyyMMdd-HHmmss")
+                    );
                     Path outputFilePath = Paths.get(
                         cmdLine.getOptionValue(ARG_OUTPUT_DIR),
                         type.name().toLowerCase(),
                         connectedEntities.dataSourceId().shortValue(),
-                        ZonedDateTime.now().format(
-                            DateTimeFormatter.ofPattern("yyyyMMdd-HHmmss")
-                        )
+                        cmdLine.hasOption(ARG_OUTPUT_PREFIX)
+                            ? String.format("%s--%s", cmdLine.getOptionValue(ARG_OUTPUT_PREFIX), timestampSuffix)
+                            : timestampSuffix
                     );
                     outputFilePath.getParent().toFile().mkdirs();
                     graph.saveAsImage(
                         outputFilePath.toAbsolutePath().toString()
                     );
+                    LOG.info("output file: {}", outputFilePath.toAbsolutePath());
                 }
             ).build().run();
     }
