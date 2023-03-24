@@ -4,6 +4,7 @@ package com.github.bogdanovmn.graphbuilder.source.multimoduleproject;
 import com.github.bogdanovmn.graphbuilder.core.ConnectedEntities;
 import com.github.bogdanovmn.graphbuilder.core.Connection;
 import com.github.bogdanovmn.graphbuilder.core.ConnectionNode;
+import com.github.bogdanovmn.graphbuilder.core.DirectoryDataSourceId;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
@@ -15,7 +16,9 @@ public class ProjectModuleDependencyConnectedEntities extends ConnectedEntities 
     private final ProjectModel projectModel;
 
     public ProjectModuleDependencyConnectedEntities(String projectDir) throws IOException {
-        super(projectDir);
+        super(
+            new DirectoryDataSourceId(projectDir)
+        );
         this.projectModel = new ProjectRootDir(projectDir).model();
     }
 

@@ -1,5 +1,6 @@
 package com.github.bogdanovmn.graphbuilder.core;
 
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 import java.util.HashSet;
@@ -9,9 +10,10 @@ import java.util.stream.Stream;
 
 @RequiredArgsConstructor
 public abstract class ConnectedEntities {
-    protected final String dataSourceId;
+    @Getter
+    protected final DataSourceId dataSourceId;
 
-    abstract public Set<Connection> connections();
+    public abstract Set<Connection> connections();
 
     public final Set<Connection> processedConnections() {
         Set<Connection> connections = connections();

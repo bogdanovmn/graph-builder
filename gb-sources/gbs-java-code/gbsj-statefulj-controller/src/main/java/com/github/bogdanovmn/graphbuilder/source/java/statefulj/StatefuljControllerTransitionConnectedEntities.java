@@ -2,6 +2,7 @@ package com.github.bogdanovmn.graphbuilder.source.java.statefulj;
 
 import com.github.bogdanovmn.graphbuilder.core.ConnectedEntities;
 import com.github.bogdanovmn.graphbuilder.core.Connection;
+import com.github.bogdanovmn.graphbuilder.core.DirectoryDataSourceId;
 import com.github.bogdanovmn.graphbuilder.core.FilesDataSource;
 import com.github.javaparser.StaticJavaParser;
 import com.github.javaparser.ast.CompilationUnit;
@@ -17,7 +18,9 @@ public class StatefuljControllerTransitionConnectedEntities extends ConnectedEnt
     private final FilesDataSource dataSource;
 
     public StatefuljControllerTransitionConnectedEntities(String dataSourceId) {
-        super(dataSourceId);
+        super(
+            new DirectoryDataSourceId(dataSourceId)
+        );
         this.dataSource = new StatefuljJavaCodeDataSource(dataSourceId);
     }
 

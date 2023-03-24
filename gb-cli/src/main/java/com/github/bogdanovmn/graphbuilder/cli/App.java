@@ -1,11 +1,14 @@
 package com.github.bogdanovmn.graphbuilder.cli;
 
 import com.github.bogdanovmn.cmdline.CmdLineAppBuilder;
+import com.github.bogdanovmn.graphbuilder.core.ConnectedEntities;
 import com.github.bogdanovmn.graphbuilder.core.Connection;
 import com.github.bogdanovmn.graphbuilder.core.ConnectionsGraph;
 import com.github.bogdanovmn.graphbuilder.core.GraphOutputOptions;
 import com.github.bogdanovmn.graphbuilder.render.graphviz.ConnectionsGraphViz;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
@@ -46,15 +49,13 @@ class App {
 
             .withEntryPoint(
                 cmdLine -> {
-                    DataSourceId dataSourceId = new DataSourceId(
-                        cmdLine.getOptionValue(ARG_DATA_SOURCE)
-                    );
                     GraphType type = GraphType.valueOf(
                         cmdLine.getOptionValue(ARG_GRAPH_TYPE)
                     );
-                    Set<Connection> connections = type.connectedEntitiesInstance(
-                        dataSourceId.value()
-                    ).processedConnections();
+                    ConnectedEntities connectedEntities = type.connectedEntitiesInstance(
+                        cmdLine.getOptionValue(ARG_DATA_SOURCE)
+                    );
+                    Set<Connection> connections = connectedEntities.processedConnections();
 
                     if (cmdLine.hasOption(ARG_VERBOSE)) {
                         connections.stream().sorted(
@@ -69,16 +70,18 @@ class App {
                             .mergeLinks(cmdLine.hasOption(ARG_MERGE_LINKS))
                         .build()
                     );
-                    graph.saveAsImage(
-                        String.format(
-                            "%s/%s--%s--%s.png",
-                                cmdLine.getOptionValue(ARG_OUTPUT_DIR),
-                                type.name().toLowerCase(),
-                                dataSourceId.shortValue(),
-                                ZonedDateTime.now().format(
-                                    DateTimeFormatter.ofPattern("yyyyMMdd-HHmmss")
-                                )
+
+                    Path outputFilePath = Paths.get(
+                        cmdLine.getOptionValue(ARG_OUTPUT_DIR),
+                        type.name().toLowerCase(),
+                        connectedEntities.dataSourceId().shortValue(),
+                        ZonedDateTime.now().format(
+                            DateTimeFormatter.ofPattern("yyyyMMdd-HHmmss")
                         )
+                    );
+                    outputFilePath.getParent().toFile().mkdirs();
+                    graph.saveAsImage(
+                        outputFilePath.toAbsolutePath().toString()
                     );
                 }
             ).build().run();
