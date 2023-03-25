@@ -14,5 +14,11 @@
     <version>${revision}</version>
     <packaging>jar</packaging>
 
+    <dependencies>
+        <dependency>
+            <groupId>com.github.bogdanovmn.common.core</groupId>
+            <artifactId>common-core</artifactId>
+        </dependency>
+    </dependencies>
 
 </project>

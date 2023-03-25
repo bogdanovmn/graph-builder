@@ -1,7 +1,7 @@
 package com.github.bogdanovmn.graphbuilder.source.multimoduleproject.maven;
 
+import com.github.bogdanovmn.common.files.Directory;
 import com.github.bogdanovmn.graphbuilder.core.DataSource;
-import com.github.bogdanovmn.graphbuilder.core.Directory;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.maven.model.Model;
 import org.apache.maven.model.io.xpp3.MavenXpp3Reader;

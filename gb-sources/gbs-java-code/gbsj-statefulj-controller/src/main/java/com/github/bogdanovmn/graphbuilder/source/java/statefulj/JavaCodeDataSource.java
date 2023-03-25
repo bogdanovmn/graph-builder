@@ -1,6 +1,6 @@
 package com.github.bogdanovmn.graphbuilder.source.java.statefulj;
 
-import com.github.bogdanovmn.graphbuilder.core.Directory;
+import com.github.bogdanovmn.common.files.Directory;
 import com.github.bogdanovmn.graphbuilder.core.FilesDataSource;
 import lombok.extern.slf4j.Slf4j;
 

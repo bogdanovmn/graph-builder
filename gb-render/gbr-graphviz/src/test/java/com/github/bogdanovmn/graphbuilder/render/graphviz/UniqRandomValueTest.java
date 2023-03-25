@@ -1,6 +1,7 @@
 package com.github.bogdanovmn.graphbuilder.render.graphviz;
 
 import com.github.bogdanovmn.common.core.ObjCounter;
+import com.github.bogdanovmn.common.random.UniqRandomValue;
 import org.assertj.core.util.Sets;
 import org.junit.jupiter.api.Test;
 

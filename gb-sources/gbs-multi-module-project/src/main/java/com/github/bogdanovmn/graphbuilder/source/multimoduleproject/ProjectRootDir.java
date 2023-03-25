@@ -1,6 +1,6 @@
 package com.github.bogdanovmn.graphbuilder.source.multimoduleproject;
 
-import com.github.bogdanovmn.graphbuilder.core.Directory;
+import com.github.bogdanovmn.common.files.Directory;
 import com.github.bogdanovmn.graphbuilder.source.multimoduleproject.gradle.GradleProject;
 import com.github.bogdanovmn.graphbuilder.source.multimoduleproject.gradle.GradleProjectModel;
 import com.github.bogdanovmn.graphbuilder.source.multimoduleproject.maven.MavenPomFilesDataSource;

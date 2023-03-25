@@ -1,5 +1,6 @@
 package com.github.bogdanovmn.graphbuilder.render.graphviz;
 
+import com.github.bogdanovmn.common.random.UniqRandomValue;
 import com.github.bogdanovmn.graphbuilder.core.*;
 import guru.nidi.graphviz.attribute.*;
 import guru.nidi.graphviz.engine.Format;
