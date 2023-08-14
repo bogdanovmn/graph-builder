@@ -12,10 +12,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Slf4j
 class App {
@@ -34,17 +32,13 @@ class App {
             .withJarName("graph-builder")
             .withDescription("Generate a graph from a source of data")
 
-            .withRequiredArg(ARG_DATA_SOURCE, "data source directory")
-            .withRequiredArg(
-                ARG_GRAPH_TYPE,
-                String.format(
-                    "data source & target graph type (%s)",
-                    Arrays.stream(GraphType.values())
-                        .map(Enum::name)
-                        .collect(Collectors.joining(" | "))
-                )
-            )
-            .withRequiredArg(ARG_OUTPUT_DIR, "where results have to be created")
+            .withArg(ARG_DATA_SOURCE, "data source directory")
+                .required()
+            .withEnumArg(ARG_GRAPH_TYPE, "data source & target graph type", GraphType.class)
+                .withDefault(GraphType.PROJECT_MODULE_DEPENDENCY)
+                .required()
+            .withArg(ARG_OUTPUT_DIR, "where results have to be created")
+                .required()
             .withArg(ARG_OUTPUT_PREFIX, "output file prefix")
 
             .withFlag(ARG_VERBOSE, "print additional info")
@@ -52,16 +46,14 @@ class App {
             .withFlag(ARG_MERGE_LINKS, "try to decrease a number of links")
 
             .withEntryPoint(
-                cmdLine -> {
-                    GraphType type = GraphType.valueOf(
-                        cmdLine.getOptionValue(ARG_GRAPH_TYPE)
-                    );
+                options -> {
+                    GraphType type = (GraphType) options.getEnum(ARG_GRAPH_TYPE);
                     ConnectedEntities connectedEntities = type.connectedEntitiesInstance(
-                        cmdLine.getOptionValue(ARG_DATA_SOURCE)
+                        options.get(ARG_DATA_SOURCE)
                     );
                     Set<Connection> connections = connectedEntities.processedConnections();
 
-                    if (cmdLine.hasOption(ARG_VERBOSE)) {
+                    if (options.getBool(ARG_VERBOSE)) {
                         connections.stream().sorted(
                             Comparator.comparing(c -> c.from().id())
                         ).forEach(System.out::println);
@@ -70,8 +62,8 @@ class App {
                     ConnectionsGraph graph = new ConnectionsGraphViz(
                         connections,
                         GraphOutputOptions.builder()
-                            .handMade(cmdLine.hasOption(ARG_HAND_MADE))
-                            .mergeLinks(cmdLine.hasOption(ARG_MERGE_LINKS))
+                            .handMade(options.getBool(ARG_HAND_MADE))
+                            .mergeLinks(options.getBool(ARG_MERGE_LINKS))
                         .build()
                     );
 
@@ -79,11 +71,11 @@ class App {
                         DateTimeFormatter.ofPattern("yyyyMMdd-HHmmss")
                     );
                     Path outputFilePath = Paths.get(
-                        cmdLine.getOptionValue(ARG_OUTPUT_DIR),
+                        options.get(ARG_OUTPUT_DIR),
                         type.name().toLowerCase(),
                         connectedEntities.dataSourceId().shortValue(),
-                        cmdLine.hasOption(ARG_OUTPUT_PREFIX)
-                            ? String.format("%s--%s", cmdLine.getOptionValue(ARG_OUTPUT_PREFIX), timestampSuffix)
+                        options.has(ARG_OUTPUT_PREFIX)
+                            ? String.format("%s--%s", options.get(ARG_OUTPUT_PREFIX), timestampSuffix)
                             : timestampSuffix
                     );
                     outputFilePath.getParent().toFile().mkdirs();
