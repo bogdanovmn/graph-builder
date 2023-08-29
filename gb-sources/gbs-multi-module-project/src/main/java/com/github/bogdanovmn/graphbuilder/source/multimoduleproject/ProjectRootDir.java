@@ -17,20 +17,20 @@ class ProjectRootDir {
 
     public ProjectModel model() throws IOException {
         ProjectModel model;
-        if (!root.filesWithName("pom.xml").isEmpty()) {
-            model = new MavenProjectModel(
-                new MavenPomFilesDataSource(root.toString())
-                    .entities()
-            );
-        }
-        else if (!root.files((name) -> name.startsWith("build.gradle")).isEmpty()) {
+        boolean isMaven = !root.filesWithName("pom.xml").isEmpty();
+        boolean isGradle = !root.files((name) -> name.startsWith("build.gradle")).isEmpty();
+        if (isGradle) {
             model = new GradleProjectModel(
                 new GradleProject(
                     root.toString()
                 )
             );
-        }
-        else {
+        } else if (isMaven) {
+            model = new MavenProjectModel(
+                new MavenPomFilesDataSource(root.toString())
+                    .entities()
+            );
+        } else {
             throw new UnsupportedOperationException(
                 String.format("Can't find any supported build system configuration file: %s", root)
             );

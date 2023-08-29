@@ -13,16 +13,18 @@ http://www.graphviz.org/download/
 ## Usage information
 ```bash
 $ java -jar gb-cli/target/graph-builder.jar -h
-usage: java -jar graph-builder.jar -d <ARG> -g <ARG> -o <ARG> [-v] [-r]
-       [-m] [-h]
+usage: java -jar graph-builder.jar -d <STR> -o <STR> [-g <ENUM>] [-ofp <STR>] [-r] [-m] [-v] [-h]
 Generate a graph from a source of data
- -d,--data-source <ARG>   data source directory
- -g,--graph-type <ARG>    data source & target graph type
- -o,--output-dir <ARG>    where results have to be created
- -v,--verbose             print additional info
- -r,--rough               make a graph with hand made style
- -m,--merge-links         try to decrease a number of links
- -h,--help                show this message
+  -d,--data-source <STR>            data source directory
+  -o,--output-dir <STR>             where results have to be created
+  -g,--graph-type <ENUM>            data source & target graph type
+                                    Possible values: PROJECT_MODULE_DEPENDENCY | JAVA_STATEFULJ_TRANSITION
+                                    Default: PROJECT_MODULE_DEPENDENCY
+  -ofp,--output-file-prefix <STR>   output file prefix
+  -r,--rough                        make a graph with hand made style
+  -m,--merge-links                  try to decrease a number of links
+  -v,--verbose                      print additional info
+  -h,--help                         show this message
 ```
 ## Making this project modules dependencies graph (hand made style)
 ```bash

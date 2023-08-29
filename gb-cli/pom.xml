@@ -32,8 +32,8 @@
             <artifactId>gbr-graphviz</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.github.bogdanovmn.cmdline</groupId>
-            <artifactId>cmdline-app</artifactId>
+            <groupId>com.github.bogdanovmn.jaclin</groupId>
+            <artifactId>jaclin</artifactId>
         </dependency>
     </dependencies>
 
